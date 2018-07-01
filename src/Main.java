@@ -47,9 +47,9 @@ public class Main {
 	}
 	public static void manageCards() {
 		Log l = Log.instance(Main.class, "CardManager");
-		System.out.println("1 : Neue Schülerberischt erstellen.\n2 :  Zugriff auf Schülerübersicht.\n'Esc' : Abbrechen");
+		System.out.println("1 : Neue Schï¿½lerberischt erstellen.\n2 :  Zugriff auf Schï¿½lerï¿½bersicht.\n'Esc' : Abbrechen");
 		String input = scan.next();
-		if(input.equals("1")) { // Alle nötigen Daten als Eingabe von Nutzer anfordern
+		if(input.equals("1")) { // Alle nï¿½tigen Daten als Eingabe von Nutzer anfordern
 			System.out.println("NEU ERSTELLEN:");
 			System.out.println("Vorname:");
 			vorname = scan.next();
@@ -62,6 +62,11 @@ public class Main {
 			int age = scan.nextInt();
 			System.out.println("Geburtsdatum:");
 			String birthdayraw = scan.next();
+			System.out.printf("Notengebung erstellen fï¿½r %s,%s: \n\n",nachname,vorname);
+			Map<String,Integer> grades = new HashMap<String, Integer>();
+			System.out.println("Bitte geben sie die Fï¿½cher des Schï¿½lers Kommasepariert ein:");
+			String subjectsraw = scan.next();
+			String[] subjects = subjectsraw.split(",");
 			String[] inp = birthdayraw.split("\\.");
 			Calendar cd = new GregorianCalendar();
 			Date dt = new Date();
@@ -69,11 +74,6 @@ public class Main {
 			cd.set(parse(inp[2]), parse(inp[1])-1, parse(inp[0]),0,0);
 			dt = cd.getTime();
 			l.log(dt.toString());
-			System.out.printf("Notengebung erstellen für %s,%s: \n\n",nachname,vorname);
-			Map<String,Integer> grades = new HashMap<String, Integer>();
-			System.out.println("Bitte geben sie die Fächer des Schülers Kommasepariert ein:");
-			String subjectsraw = scan.next();
-			String[] subjects = subjectsraw.split(",");
 			currentid++;
 			students.add(currentid+":"+nachname +", "+ vorname);
 			for(int i = 0;i<subjects.length;i++) {
@@ -81,7 +81,7 @@ public class Main {
 				int grade = scan.nextInt();
 				grades.put(subjects[i],grade);
 			}
-			System.out.printf("Schüler %s jetzt erstellen?(J/N)\n",vorname + " " + nachname);
+			System.out.printf("Schï¿½ler %s jetzt erstellen?(J/N)\n",vorname + " " + nachname);
 			String createcard = scan.next();
 			if(createcard.equals("J")) {
 			card = new ReportCard(vorname.toString(),nachname.toString(),studentgrade,grades,currentid);
@@ -93,15 +93,15 @@ public class Main {
 			}
 		}
 		else if(input.equals("2")) {
-			System.out.println("Alle Übersischtskarten:\n");
+			System.out.println("Alle ï¿½bersischtskarten:\n");
 			if(students.size() != 0) {
 			for(int i = 0;i<students.size();i++) {
 				System.out.println(students.get(i));
 			}
-			System.out.println("\nBitte die passende Zahl eingeben, oder 'Suche' eingeben um Schüler nach Namen zu Suchen.\n'Esc' : Abbrechen");
+			System.out.println("\nBitte die passende Zahl eingeben, oder 'Suche' eingeben um Schï¿½ler nach Namen zu Suchen.\n'Esc' : Abbrechen");
 			}
 			else{
-				System.out.println("Noch keine Übersichtskarten vorhanden. Esc eingeben, um abzubrechen und neue Karte zu erstellen.");
+				System.out.println("Noch keine ï¿½bersichtskarten vorhanden. Esc eingeben, um abzubrechen und neue Karte zu erstellen.");
 			}
 			String inp = scan.next();
 			if(inp.equals("Esc")) {
@@ -114,11 +114,11 @@ public class Main {
 				Map<String,Integer> gradereturn  = card.requestGradesFromCard(Integer.parseInt(inp)-1);
 				int currentcardindex = Integer.parseInt(inp)-1;
 				String[] currentname = names.get(currentcardindex).split("_");
-				System.out.printf("Übersicht für %s, %s:\n",currentname[1],currentname[0]);
+				System.out.printf("ï¿½bersicht fï¿½r %s, %s:\n",currentname[1],currentname[0]);
 				for ( String key : gradereturn.keySet() ) {
 				System.out.println(key+" : "+gradereturn.get(key));
 				}
-				System.out.println("\n'Esc' : Zurück\n'Del' : Karte Löschen");
+				System.out.println("\n'Esc' : Zurï¿½ck\n'Del' : Karte Lï¿½schen");
 				inp = scan.next();
 				if(inp.equals("Esc")) {
 					manageCards();
@@ -131,7 +131,7 @@ public class Main {
 		}
 	}
 	public static void searchCard() {
-		System.out.printf("Nach Überischtskarte suchen(Namen eingeben):");
+		System.out.printf("Nach ï¿½berischtskarte suchen(Namen eingeben):");
 		String keyword = scan.next();
 	}
 	public static int parse(String s) {
