@@ -1,10 +1,13 @@
 import java.io.IOException;
-import java.util.ArrayList;
+
+import java.util.*;
+import java.awt.*;
+import java.util.logging.Logger;
+
+import javax.swing.JFrame;
+
 import data.Database;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Scanner;
+import intern.Log;
 
 public class Main {
 	String cancel = "Esc";
@@ -17,9 +20,15 @@ public class Main {
 	static Object nachname;
 	static Object vorname;
 	boolean loggedin = false;
-	
 	public static void main(String[] args) throws IOException {
+	    JFrame window = new JFrame();
+	    window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    window.setSize(1000, 750);
+	    window.setTitle("ReportCard Manager");
+	    window.setVisible(true);
+		Log l = Log.instance(Main.class,"DataBaseAccess");
 		Database data = new Database();
+		l.log(data.getTimeCreationDate());
 		System.out.println("Willkommen!\nUm dieses Programm abzubrechen, geben sie einfach 'Esc' ein.\nBitte loggen sie sich ein.");
 		System.out.printf("Nutzername:");
 		String usern = scan.next();
@@ -37,17 +46,29 @@ public class Main {
 		}
 	}
 	public static void manageCards() {
+		Log l = Log.instance(Main.class, "CardManager");
 		System.out.println("1 : Neue Schülerberischt erstellen.\n2 :  Zugriff auf Schülerübersicht.\n'Esc' : Abbrechen");
 		String input = scan.next();
-		if(input.equals("1")) {
+		if(input.equals("1")) { // Alle nötigen Daten als Eingabe von Nutzer anfordern
 			System.out.println("NEU ERSTELLEN:");
-			System.out.printf("Vorname:");
+			System.out.println("Vorname:");
 			vorname = scan.next();
-			System.out.printf("Nachname:");
+			System.out.println("Nachname:");
 			nachname = scan.next();
 			names.add((String) vorname+"_"+(String) nachname);
-			System.out.printf("Klassenstufe:");
+			System.out.println("Klassenstufe:");
 			int studentgrade = scan.nextInt();
+			System.out.println("Alter:");
+			int age = scan.nextInt();
+			System.out.println("Geburtsdatum:");
+			String birthdayraw = scan.next();
+			String[] inp = birthdayraw.split("\\.");
+			Calendar cd = new GregorianCalendar();
+			Date dt = new Date();
+			l.log(Integer.toString(inp.length));
+			cd.set(parse(inp[2]), parse(inp[1])-1, parse(inp[0]),0,0);
+			dt = cd.getTime();
+			l.log(dt.toString());
 			System.out.printf("Notengebung erstellen für %s,%s: \n\n",nachname,vorname);
 			Map<String,Integer> grades = new HashMap<String, Integer>();
 			System.out.println("Bitte geben sie die Fächer des Schülers Kommasepariert ein:");
@@ -112,5 +133,8 @@ public class Main {
 	public static void searchCard() {
 		System.out.printf("Nach Überischtskarte suchen(Namen eingeben):");
 		String keyword = scan.next();
+	}
+	public static int parse(String s) {
+		return Integer.parseInt(s);
 	}
 }

@@ -1,15 +1,9 @@
 package data;
 
-import accounts.Account;
+import accounts.Student;
 import intern.Log;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Calendar.Builder;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -23,10 +17,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Database {
-	static final ArrayList<Account> ACCOUNTS = null;
+	static final ArrayList<Student> ACCOUNTS = null;
 	private Log l = Log.instance(this.getClass(),"DatabaseReader");
-	private static String DBcreationTimeString;
-	private static String DBlastAccessTimeString;
+	private String DBcreationTimeString;
+	private String DBlastAccessTimeString;
+	private static String filecontent = "";
+	public boolean isReadyWriteable = false;
 	private static JSONObject obj;
 	private static JSONObject fileObj;
 	private static File databasefile = new File("C:/Users/Lukas/eclipse-workspace/ReportCard/src/data/datafiles/data.json");
@@ -37,23 +33,25 @@ public class Database {
 						BufferedReader reader = Files.newBufferedReader(databasefile.toPath(), defaultcharset)
 				){
 						l.log("DatabaseFile exists as "+databasefile.getName());
-						String line = "";
 						String templine = null;
-						BufferedWriter appendtext = Files.newBufferedWriter(databasefile.toPath(),defaultcharset,StandardOpenOption.WRITE);
+						BufferedWriter appendtext = Files.newBufferedWriter(databasefile.toPath(),defaultcharset,StandardOpenOption.SYNC);
 						while ((templine = reader.readLine()) != null) {
-							line += templine;
+							filecontent += templine;
 						}
-						l.log("Old file content:"+line);
-						Boolean fileNotEmpty = line.equals("")?false:true;
+						l.log("Old file content:"+filecontent);
+						Boolean fileNotEmpty = filecontent.equals("")?false:true;
 						if(fileNotEmpty){
-							fileObj = new JSONObject(line);
-							this.DBcreationTimeString = fileObj.getString("creationDate");
-							this.DBlastAccessTimeString = fileObj.getString("lastAccess");
+							fileObj = new JSONObject(filecontent);
+							DBcreationTimeString = fileObj.getString("creationDate");
+							DBlastAccessTimeString = fileObj.getString("lastAccess");
+							l.log("updating lastAccess");
 							writeDate("lastAccess", appendtext, false, fileObj);
 						}
 						else{
+							l.log("Creating new Databasefile because file is empty...");
 							createDBfile();
 						}
+						isReadyWriteable = true;
 						l.log("Database created at:"+fileObj.get("creationDate"));
 						appendtext.close();
 						reader.close();
@@ -74,11 +72,12 @@ public class Database {
 		try(BufferedWriter writer = Files.newBufferedWriter(databasefile.toPath(), defaultcharset)){
 			databasefile.createNewFile();
 			writeDate(null,writer,true,null);
+			isReadyWriteable = true;
+			l.log("DatabasFile was created");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		l.log("DatabasFile was created");
 	}
 	private void writeDate(String keyName,BufferedWriter writer,Boolean newDBFile,JSONObject updatebleobj){
 		Date dt = new Date();
@@ -88,21 +87,51 @@ public class Database {
 		String datestringraw = cldnow.get(Calendar.DATE)+"-"+(cldnow.get(Calendar.MONTH)+1)+"-"+cldnow.get(Calendar.YEAR);
 		String datestring = datestringraw+"_"+time;
 		obj = newDBFile?new JSONObject():updatebleobj;
+		l.log("obj old state:"+obj.toString());
 		if(!newDBFile) {
 			obj.put(keyName,datestring);
-			l.log(this.DBlastAccessTimeString);
 		}
 		else {
 			obj.put("creationDate", datestring);
 			obj.put("lastAccess", datestring);
 		}
-		obj.write(writer,0,3);
+		l.log("obj new state:"+obj.toString());
+		obj.write(writer);
 	}
 	public String getTimeLastAccess() {
 		return this.DBlastAccessTimeString;
 	}
 	public String getTimeCreationDate() {
 		return this.DBcreationTimeString;
+	}
+	public Map<String,Integer> getGradesByPos(int pos) {
+		Map returngrades = new HashMap<String,Integer>();
+		return returngrades;
+	}
+	public boolean createStudent(String[] names,int age,Date birthday,String classname,Map<String,Integer> grades,long notes) {
+		if(isReadyWriteable) {
+			try(
+			BufferedWriter writer = Files.newBufferedWriter(databasefile.toPath(),defaultcharset,StandardOpenOption.SYNC)
+				){
+			JSONObject newjson = new JSONObject();
+			newjson.put("name",names);
+			newjson.put("age", age);
+			newjson.put("DateOfBirth", birthday.toString());
+			newjson.put("className", classname);
+			newjson.put("grades", grades);
+			newjson.put("notes", notes);
+			newjson.write(writer);
+			return true;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			}
+		}
+		else {
+			l.log("Couldn't write new students JSONObject to file: File not ready to write.");
+			return false;
+		}
 	}
 }
  
