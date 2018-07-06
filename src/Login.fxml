@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text layoutX="228.0" layoutY="118.0" stroke="#6c2626" strokeType="OUTSIDE" strokeWidth="0.0" text="Access locked.">
+         <font>
+            <Font size="23.0" />
+         </font>
+      </Text>
+      <TextField layoutX="226.0" layoutY="162.0" promptText="Username/ID" />
+      <TextField layoutX="226.0" layoutY="200.0" promptText="Password" />
+      <Button alignment="CENTER" layoutX="478.0" layoutY="344.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="108.0" text="Login">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Hyperlink layoutX="225.0" layoutY="355.0" text="Get help" />
+      <Text layoutX="21.0" layoutY="371.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Having problems with gaining access?" />
+   </children>
+</AnchorPane>

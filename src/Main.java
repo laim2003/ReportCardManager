@@ -2,14 +2,16 @@ import java.io.IOException;
 
 import java.util.*;
 import java.awt.*;
-import java.util.logging.Logger;
-
-import javax.swing.JFrame;
-
+import javafx.scene.layout.*;
+import javafx.application.Application;
+import javafx.scene.*;
+import javafx.stage.*;
+import javafx.fxml.*;
+import javafx.event.*;
 import data.Database;
 import intern.Log;
 
-public class Main {
+public class Main extends Application implements EventHandler<ActionEvent>{
 	String cancel = "Esc";
 	String errormsg;
 	static ArrayList<String> names = new ArrayList<String>();
@@ -20,12 +22,8 @@ public class Main {
 	static Object nachname;
 	static Object vorname;
 	boolean loggedin = false;
-	public static void main(String[] args) throws IOException {
-	    JFrame window = new JFrame();
-	    window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    window.setSize(1000, 750);
-	    window.setTitle("ReportCard Manager");
-	    window.setVisible(true);
+	public static void main(String[] args){
+		launch(args);
 		Log l = Log.instance(Main.class,"DataBaseAccess");
 		Database data = new Database();
 		l.log(data.getTimeCreationDate());
@@ -136,5 +134,19 @@ public class Main {
 	}
 	public static int parse(String s) {
 		return Integer.parseInt(s);
+	}
+	@Override
+	public void start(Stage stage) throws Exception {
+		stage.setTitle("TeachEm Datenbankmanager");
+		stage.setResizable(false);
+        Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+		
+	}
+	@Override
+	public void handle(ActionEvent event) {
+		
 	}
 }
