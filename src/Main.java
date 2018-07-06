@@ -29,24 +29,7 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 	boolean loggedin = false;
 	public static void main(String[] args){
 		launch(args);
-		Log l = Log.instance(Main.class,"DataBaseAccess");
-		Database data = new Database();
-		l.log(data.getTimeCreationDate());
-		System.out.println("Willkommen!\nUm dieses Programm abzubrechen, geben sie einfach 'Esc' ein.\nBitte loggen sie sich ein.");
-		System.out.printf("Nutzername:");
-		String usern = scan.next();
-		System.out.printf("Passwort:");
-		String passw = scan.next();
-		LoginRequest req1 = new LoginRequest(usern,passw);
-		if(req1.getValid("username")&&req1.getValid("password")) {
-			boolean loggedin = false;
-			manageCards();
-		}
-		else {
-			System.out.println("Unbekannter Nutzername oder Passwort.");
-			System.out.flush();
-			main(args);
-		}
+		UserSession session = new UserSession();
 	}
 	public static void manageCards() {
 		Log l = Log.instance(Main.class, "CardManager");
