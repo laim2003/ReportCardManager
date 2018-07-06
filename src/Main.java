@@ -1,15 +1,20 @@
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
-import java.util.*;
-import java.awt.*;
-import javafx.scene.layout.*;
-import javafx.application.Application;
-import javafx.scene.*;
-import javafx.stage.*;
-import javafx.fxml.*;
-import javafx.event.*;
 import data.Database;
 import intern.Log;
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 public class Main extends Application implements EventHandler<ActionEvent>{
 	String cancel = "Esc";
